@@ -13,18 +13,20 @@ export default function AbrirOlhos() {
 
   const allTexts = [
     {
-      choice: false,
       text: 'É uma sala escura, nela não há mobílias, em sua plena escuridão nada pode ser visto...', 
+      choice: false,
     },
     {
-      choice: true,
       text: 'Me levanto...',
+      choice: true,
       choices: [
         {
-          text: 'toco meu rosto',
+          choiceText: 'toco meu rosto',
+          nextText: 'Seus olhos estão fechados.'
         },
         {
-          text: 'encaro o abismo'
+          choiceText: 'encaro o abismo',
+          nextText: 'Ele te encara de volta, o medo corrói cada parte do seu ser, você não está sozinho, está com o abismo.'
         }
       ]
     }
@@ -38,6 +40,16 @@ export default function AbrirOlhos() {
       setText(allTexts[currentText].text);
     }, 2000)
   }, [])
+
+  function showTextNode(textNodeIndex) {
+
+  }
+
+  function selectOption(option) {
+
+  }
+
+
 
   const zoomIn = {
     0: {
@@ -103,10 +115,15 @@ export default function AbrirOlhos() {
       {isChoice &&
         <Choices animation={isChoice ? zoomIn : zoomOut}>
           {allTexts[currentText].choices.map((choice) => {
-            return <Choice key={choice.text}><ChoiceText>{choice.text}</ChoiceText></Choice>
+            return (
+              <Choice key={choice.choiceText}
+                onPress={() => setText(choice.nextText)}
+              >
+                <ChoiceText>{choice.choiceText}</ChoiceText>
+              </Choice>
+            )
           })}
-        </Choices>
-      }
+        </Choices>}
     </Container>
   );
 };

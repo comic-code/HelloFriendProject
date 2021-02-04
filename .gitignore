@@ -281,6 +281,8 @@ DerivedData/
 # Icon must end with two \r
 Icon
 
+*.mp4
+*.mkv
 
 # Thumbnails
 ._*

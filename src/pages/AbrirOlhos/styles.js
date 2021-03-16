@@ -3,35 +3,19 @@ import TypeWriter from 'react-native-typewriter'
 import * as Animatable from 'react-native-animatable';
 import normalize from '../../utils/normalize';
 
-export const zoomIn = {
-  0: {
-    opacity: 0,
-    scale: 0,
-  },
-  0.5: {
-    opacity: 1,
-    scale: 0.3,
-  },
-  1: {
-    opacity: 1,
-    scale: 1,
-  },
-};
+export const ImageContainer = styled(Animatable.View)`
+  position: absolute;
+  width: 100%;
+  height: ${normalize(300)}px;
+  justify-content: center;
+  align-items: center;
+  top: ${normalize(30)}px;
+`
 
-export const zoomOut = {
-  0: {
-    opacity: 1,
-    scale: 1,
-  },
-  0.5: {
-    opacity: 1,
-    scale: 0.3,
-  },
-  1: {
-    opacity: 0,
-    scale: 0,
-  },
-}
+export const Image = styled(Animatable.Image)`
+  height: ${normalize(300)}px;
+
+`
 
 export const NarratorText = styled(TypeWriter)`
   font-family: 'PressStart2P-Regular';

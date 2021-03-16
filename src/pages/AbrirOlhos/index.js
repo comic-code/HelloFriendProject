@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { TouchableWithoutFeedback } from 'react-native';
+import ImmersiveMode from 'react-native-immersive-mode'
 
 import { Container } from '../Menu/styles';
-import { zoomIn, zoomOut, NarratorText, Choices, Choice, ChoiceText } from './styles';
+import { zoomIn, zoomOut, shake } from '../../animations';
+import { Image, NarratorText, Choices, Choice, ChoiceText, ImageContainer } from './styles';
+// import Teste from '';
 
 export default function AbrirOlhos() {
   
@@ -11,8 +14,7 @@ export default function AbrirOlhos() {
   const [isChoice, setIsChoice] = useState(false);
   const [currentChoices, setCurrentChoices] = useState([]);
   const [choicesState, setChoicesState] = useState({});
-  
-  
+
   function showTextNode(textNodeIndex) {
     const textNode = textNodes.find(textNode => textNode.id === textNodeIndex);
     setText(textNode);
@@ -45,21 +47,20 @@ export default function AbrirOlhos() {
   const textNodes = [
     {
       id: 1,
-      text: 'É uma sala escura, nela não há mobílias, em sua plena escuridão nada pode ser visto...',
+      text: 'Você está em uma sala escura, nela não existem mobílias, em sua perpetua escuridão nada além de seu contorno pode ser visto, ou melhor, sentido...',
       nextText: 2
     },
     {
       id: 2,
-      text: 'Me levanto...',
+      text: 'Você levanta...',
       choices: [
         {
           text: 'toco meu rosto',
           nextText: 2.1,
         },
         {
-          text: 'encaro o abismo', //Refletirá no futuro
+          text: 'encaro o abismo',
           nextText: 2.2,
-          setState: { encarouAbismo: true }
         }
       ]
     },
@@ -75,7 +76,7 @@ export default function AbrirOlhos() {
     },
     {
       id: 2.2,
-      text: 'Ele te encara de volta, o medo corrói cada parte do seu ser, você não está sozinho, está com o abismo.',
+      text: 'Ele te encara novamente, o medo corrói cada parte do seu ser, você não está sozinho, está com o abismo. ',
       nextText: 3
     },
     {
@@ -91,7 +92,7 @@ export default function AbrirOlhos() {
           nextText: 3.2
         },
         {
-          text: 'ir ao espelho',
+          text: 'ir até o espelho',
           nextText: 4
         }
       ]
@@ -144,7 +145,7 @@ export default function AbrirOlhos() {
     },
     {
       id: 4.1,
-      text: `${choicesState.encarouAbismo ? 'Então você finalmente resolve abrir os olhos, ver a verdade do ser é sempre o primeiro passo.' : '-Oh... Olá amigo, já está acordado? Fico feliz que voltou.'}`,
+      text: 'Então você finalmente resolve abrir os olhos, ver a verdade do ser é sempre o primeiro passo.\n\n-Oh... Olá amigo, já está acordado? Fico feliz que voltou.',
       choices: [
         {
           text: 'enfiar a mão no buraco do peito',
@@ -161,7 +162,7 @@ export default function AbrirOlhos() {
       text: 'Você encontrou uma chave!', 
       choices: [
         {
-          text: 'sair do quarto',
+          text: 'Ir até a porta e sair do quarto',
           nextText: 5
         },
         {
@@ -189,10 +190,6 @@ export default function AbrirOlhos() {
           nextText: 4.31 
         },
         {
-          text: 'atacar a sombra',
-          nextText: 4.32
-        },
-        {
           text: 'ir até a caixa',
           nextText: 4.33 
         },
@@ -214,31 +211,18 @@ export default function AbrirOlhos() {
       nextText: 4.3
     },
     {
-      id: 4.32,
-      text: 'Ao atacar a sombra, o espelho se parte em centenas de pedaços.',
-      nextText: 4.321
-    },
-    {
-      id: 4.321,
-      text: '-Acho que até os melhores amigos brigam, tudo bem, vou te deixar sozinho por um tempo.',
-      choices: [
-        {
-          text: 'ir até a caixa',
-          nextText: 4.33 
-        },
-      ]
-    },
-    {
       id: 4.33,
       text: '',
       choices: [
         {
-          text: 'deixar a caixa no chão', // Não será possível mais acessar caixa na run
-          nextText: 4.331         
+          text: 'deixar a caixa no chão', // Ficará um tempo sem poder acessar a caixa.
+          nextText: 4.331,
+          setState: { acessoCaixa: false }
         },
         {
           text: 'abrir a caixa',
-          nextText: 4.332
+          nextText: 4.332,
+          setState: { acessoCaixa: true }
         }
       ]
     },
@@ -262,21 +246,43 @@ export default function AbrirOlhos() {
       text: '-E foi por isso que escolhemos por tudo nessa caixa amigo, não aguentamos mais tal peso, feche a caixa, retorne ao esquecimento, retorne ao conforto da vastidão.',
       nextText: 4.334,
     },
+
+    /////////////////////////REVISÃO PARADA AQUI/////////////////////////////////
     {
       id: 4.334,
       text: 'Você abre seus olhos, o loop não recomeça, a caixa está lacrada com mais uma camada de fita, o espelho está intacto e a porta completamente aberta.',
       choices: [
         {
           text: 'fechar a caixa e fechar os olhos',
-          // nextText: 
+          nextText: 4.3341, 
+        },
+        {
+          text: 'adentrar na caixa',
+          nextText: 4.3342
         }
       ]
+    },
+    {
+      id: 4.3341,
+      text: 'Você abre seus olhos, o loop não recomeça, a caixa está lacrada com mais um layer de fita, o espelho está intacto e a porta completamente aberta.',
+      choices: [
+        {
+          text: 'sair do quarto',
+          nextText: 5
+        }
+      ]
+    },
+    {
+      id: 4.3342,
+      text: 'O frio se espalha pelo seu corpo, o clima fica frio,',
+      // nextText: 
     }
   ]
-
   useEffect(() => {
     setPressDisable(true);
     setIsChoice(false);
+    ImmersiveMode.setBarMode('BottomSticky');
+    ImmersiveMode.setBarStyle('Dark');
     setTimeout(() => {
       showTextNode(1);
     }, 2000)
@@ -284,6 +290,12 @@ export default function AbrirOlhos() {
 
   return (
     <Container>
+      {/* <ImageContainer>
+        <Image 
+          animation={shake} iterationCount={Infinity} duration={500} easing="linear"
+          source={Teste} resizeMode="contain" 
+        />
+      </ImageContainer> */}
       <TouchableWithoutFeedback
         onPress={() =>  {
           if(currentChoices.length > 0) {

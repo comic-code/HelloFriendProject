@@ -12,11 +12,11 @@ const Stack = createStackNavigator();
 
 export default function App() {
   
-  useEffect(() => {setTimeout(() => { BackgroundColor.setColor("#202020") }, 500)}, [])
+  useEffect(() => {setTimeout(() => { BackgroundColor.setColor("#141414") }, 500)}, [])
 
   return (<>
-    <StatusBar animated backgroundColor="#202020"/>
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#202020' }}>
+    <StatusBar animated backgroundColor="#141414"/>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#141414' }}>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Menu" headerMode="none">
           <Stack.Screen name="Menu" component={Menu} />

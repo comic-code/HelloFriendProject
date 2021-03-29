@@ -1,25 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import { TouchableWithoutFeedback } from 'react-native';
-import ImmersiveMode from 'react-native-immersive-mode'
+import ImmersiveMode from 'react-native-immersive-mode';
 
 import { Container } from '../Menu/styles';
-import { zoomIn, zoomOut, shake } from '../../animations';
-import { Image, NarratorText, Choices, Choice, ChoiceText, ImageContainer } from './styles';
-// import Teste from '';
+import { zoomIn, zoomOut } from '../../animations';
+import { NarratorText, Choices, Choice, ChoiceText, Animation } from './styles';
+
+import { Test1, Test2 } from './exportedAnimations';
 
 export default function AbrirOlhos() {
   
   const [pressDisable, setPressDisable] = useState(true);
   const [text, setText] = useState({});
+  const [isAnimation, setIsAnimation] = useState(false);
+  const [currentAnimation, setCurrentAnimation] = useState('');
+  const [currentBackgroundColor, setCurrentBackgroundColor] = useState('#141414');
+  const [currentTextColor, setCurrentTextColor] = useState('#000');
   const [isChoice, setIsChoice] = useState(false);
   const [currentChoices, setCurrentChoices] = useState([]);
   const [choicesState, setChoicesState] = useState({});
+    
+  console.log(choicesState);
 
   function showTextNode(textNodeIndex) {
+    
     const textNode = textNodes.find(textNode => textNode.id === textNodeIndex);
     setText(textNode);
+    
     setCurrentChoices([]);
-    if(textNode.choices) {
+    
+    if(textNode.previousAnimation && textNode.previousAnimation.id !== currentAnimation.id) {
+      console.log(currentAnimation);
+      setCurrentAnimation(textNode.previousAnimation);
+      setIsAnimation(true);
+    } else if(textNode.nextAnimation) {
+      setCurrentAnimation(textNode.nextAnimation);
+      setIsAnimation(true);
+    } else if(textNode.choices) {
       setTimeout(() => {
         textNode.choices.map((choice) => {
           setCurrentChoices(currentChoices => [...currentChoices, choice]);
@@ -31,42 +48,73 @@ export default function AbrirOlhos() {
   }
 
   function selectChoice(choice) {
-    console.log(choice);
+    const nextTextNode = textNodes.filter((text) => { return text.id === choice.nextText })
+
     if(choice.setState) {
       let states = choicesState;
       states = Object.assign(states, choice.setState)
       setChoicesState(states);
-      showTextNode(choice.nextText);
+      
+      if(nextTextNode.previousAnimation) {
+        console.log('nextTextNode.previousAnimation')
+        setCurrentAnimation(nextTextNode.previousAnimation);
+        setIsAnimation(true);
+      } else {
+        setIsAnimation(false);
+        showTextNode(choice.nextText);
+      }
     } else {
-      showTextNode(choice.nextText);
+      if(nextTextNode.previousAnimation) {
+        setCurrentAnimation(nextTextNode.previousAnimation);
+        setIsAnimation(true);
+      } else {
+        setIsAnimation(false);
+        showTextNode(choice.nextText);
+      }
     }
   }
 
-  console.log(choicesState);
-
   const textNodes = [
+    // ESTRUTURA DEFAULT
+    // {
+    //   id: 0,
+    //   previousAnimation: true,
+    //   previousAnimationColor: '#202020',
+    //   text: 'bla bla bla'
+    //   nextAnimation: false / import
+    //   nextAnimationColor: false / '#ddd' 
+    //   choices: [
+    //     {
+    //       text: 'bla não',
+    //       nextText: 2.1,
+    //       setState: { atributoEstado: false }
+    //     },
+    //     {
+    //       text: 'bla sim',
+    //       nextText: 2.2,
+    //       setState: { atributoEstado: true }
+    //     }
+    //   ]
+    // },
     {
       id: 1,
-      text: 'Você está em uma sala escura, nela não existem mobílias, em sua perpetua escuridão nada além de seu contorno pode ser visto, ou melhor, sentido...',
-      nextText: 2
-    },
-    {
-      id: 2,
-      text: 'Você levanta...',
+      text: 'Você está em uma sala escura, nela não existe nada, apenas 4 paredes e nenhuma mobília, na sua perpétua escuridão a única coisa que pode ser vista, ou melhor, sentida é o seu contorno...',
       choices: [
         {
-          text: 'toco meu rosto',
+          text: 'tocar seu rosto',
           nextText: 2.1,
+          setState: { encarouAbismo: false }
         },
         {
-          text: 'encaro o abismo',
+          text: 'encarar o abismo',
           nextText: 2.2,
+          setState: { encarouAbismo: true }
         }
       ]
     },
     {
       id: 2.1,
-      text: 'Seus olhos estão fechados.',
+      text: 'Você levanta, se entende como ser neste espaço claustrofóbico, e tocando o próprio rosto, sente que até então eles não estavam realmente abertos...',
       choices: [
         {
           text: 'abrir os olhos',
@@ -76,15 +124,19 @@ export default function AbrirOlhos() {
     },
     {
       id: 2.2,
-      text: 'Ele te encara novamente, o medo corrói cada parte do seu ser, você não está sozinho, está com o abismo. ',
+      text: 'Ele consome até a última gota da sua fina película sanidade, o medo corrói os teus ossos, você não está sozinho, agora está com o abismo.',
       nextText: 3
     },
     {
       id: 3,
-      text: 'As luzes acendem, há uma porta, uma caixa escrita “Lembranças” e um espelho quebrado em 3 partes.',
+      previousAnimation: Test1,
+      previousAnimationColor: '#141414',
+      text: 'As luzes acendem, existem três coisas que roubam sua atenção, elas estão dividindo espaço com você.',
+      nextAnimation: Test2,
+      nextAnimationColor: '#fff',
       choices: [
         {
-          text: 'ir até a porta',
+          text: 'ir à porta',
           nextText: 3.1
         },
         {
@@ -99,7 +151,7 @@ export default function AbrirOlhos() {
     },
     {
       id: 3.1,
-      text: 'A porta está trancada.',
+      text: 'ILL Há uma porta, desenho estático, passa 2,5 segundos em tela, depois a frase\n\n\n(A porta está lacrada, isso é mostrado pelo som de porta abaixo.)\n\n\nILL A maçaneta gira, o som é de porta trancada.',
       choices: [
         {
           text: 'ir até a caixa',
@@ -113,7 +165,7 @@ export default function AbrirOlhos() {
     },
     {
       id: 3.2,
-      text: 'A caixa está lacrada.',
+      text: 'ILL Static, caixa lacrada com uma camada de fita, na caixa tem escrito “Tralhas do papai”.\n\nVocê precisa de algo para abrir isso.',
       choices: [
         {
           text: 'ir até a porta',
@@ -127,191 +179,148 @@ export default function AbrirOlhos() {
     },
     {
       id: 4,
-      text: 'O reflexo corrompido distorce sua sombra, e do ângulo certo, há um buraco em seu peito.',
+      text: 'ILL Desenho do espelho com as 3 imagens refletidas abaixo.\n\nVocê se depara com um espelho fragmentado, seu reflexo é totalmente distorcido, você está fragmentado em três.\n\nNo canto superior reflexo parece negro, denso, quase como se a sua sombra tomasse de assalto este lugar que foi dado ao teu rosto. Adicionar close do reflexo em ILL.\n\nNo inferior você percebe um buraco estranhamente largo no lugar do seu peito, coisa essa que não aparece no seu corpo físico. Adicionar close do reflexo em ILL.\n\nA última peça se encontra do lado esquerdo, ela pende até quase cair, parece que\n\naquele belo e afiado caco clama pelo toque de sua palma. Adicionar close do reflexo em ILL',
       choices: [
         {
           text: 'fitar a sombra',
-          nextText: 4.1,
+          nextText: choicesState.encarouAbismo ? 4.1 : 4.2,
         },
         {
           text: 'enfiar a mão no buraco do peito',
-          nextText: 4.2
+          nextText: 4.3
         },
         {
           text: 'pegar caco de vidro',
-          nextText: 4.3
+          nextText: 4.4
         }
       ]
     },
     {
       id: 4.1,
-      text: 'Então você finalmente resolve abrir os olhos, ver a verdade do ser é sempre o primeiro passo.\n\n-Oh... Olá amigo, já está acordado? Fico feliz que voltou.',
+      text: 'Você estende a mão, toca o espelho, o reflexo da sombra se estende e toca sua mão de fora, a sombra se estende além do espelho, com a mão fixa em seu ombro, te empurrando para trás, mas apoiando todo seu pouco peso em você. ILL\n\n– Olá amigo. – Ele sorri com os olhos.',
+      choices: [
+        {
+          text: 'você é do abismo?',
+          nextText: 4.11,
+        },
+        {
+          text: 'Você é o abismo?',
+          nextText: 4.12
+        },
+        {
+          text: 'O que é você?',
+          nextText: 4.13
+        }
+      ]
+    },
+    {
+      id: 4.11,
+      text: '– É muito cedo pra isso.',
       choices: [
         {
           text: 'enfiar a mão no buraco do peito',
-          nextText: 4.2
-        },
-        {
-          text: 'pegar caco de vidro',
           nextText: 4.3
         }
       ]
+    },
+    {
+      id: 4.12,
+      text: '– Não amigo, você ainda não está pronto para essa conversa.',
+      choices: [
+        {
+          text: 'enfiar a mão no buraco do peito',
+          nextText: 4.3
+        }
+      ] 
+    },
+    {
+      id: 4.13,
+      text: '– Eu sou o que sou, um gua para o caminho mais seguro.',
+      choices: [
+        {
+          text: 'enfiar a mão no buraco do peito',
+          nextText: 4.3
+        }
+      ] 
     },
     {
       id: 4.2,
-      text: 'Você encontrou uma chave!', 
+      text: 'Você estende a cabeça em direção ao espelho, força os olhos, uma mão toca teu ombro, tu vira e uma sombra se estende atrás de ti, ele abre grandes olhos brancos, e acena virando a cabeça.',
       choices: [
         {
-          text: 'Ir até a porta e sair do quarto',
-          nextText: 5
-        },
-        {
-          text: 'Voltar a encarar o espelho',
-          nextText: 4.21
+          text: 'enfiar a mão no buraco do peito',
+          nextText: 4.3
         }
-      ]
+      ] 
     },
     {
-      id: 4.21,
-      text: '',
+      id: 4.3,
+      text: '– É muito cedo pra isso.',
       choices: [
         {
-          text: 'pegar caco de vidro',
+          text: 'enfiar a mão no buraco do peito',
           nextText: 4.3
         }
       ]
     },
-    {
-      id: 4.3,
-      text: '',
-      choices: [
-        {
-          text: 'cortar jugular',
-          nextText: 4.31 
-        },
-        {
-          text: 'ir até a caixa',
-          nextText: 4.33 
-        },
-      ]
-    },
-    {
-      id: 4.31,
-      text: 'Você não teve forças para abrir a porta e está tudo bem...',
-      choices: [
-        {
-          text: 'abrir os olhos',
-          nextText: 4.311
-        } 
-      ]
-    },
-    {
-      id: 4.311,
-      text: 'Tudo a de ficar melhor, até o mais profundo dos abismos tem um final... Caso esteja se sentindo deprimido ou com desejo suicida, disque 188 ou acesse o site https://www.cvv.org.br, com todo amor, BS Studios!',
-      nextText: 4.3
-    },
-    {
-      id: 4.33,
-      text: '',
-      choices: [
-        {
-          text: 'deixar a caixa no chão', // Ficará um tempo sem poder acessar a caixa.
-          nextText: 4.331,
-          setState: { acessoCaixa: false }
-        },
-        {
-          text: 'abrir a caixa',
-          nextText: 4.332,
-          setState: { acessoCaixa: true }
-        }
-      ]
-    },
-    {
-      id: 4.331,
-      text: '“Algumas vezes, a vastidão do esquecimento é mais confortável que a o peso da realidade.”',
-      choices: [
-        {
-          text: 'sair do quarto',
-          nextText: 5
-        }
-      ]
-    },
-    {
-      id: 4.332,
-      text: 'O medo primal invade porta a dentro, a dor das escolhas consomem tua sanidade, o medo e depressão voltam a tomar conta.',
-      nextText: 4.333,
-    },
-    {
-      id: 4.333,
-      text: '-E foi por isso que escolhemos por tudo nessa caixa amigo, não aguentamos mais tal peso, feche a caixa, retorne ao esquecimento, retorne ao conforto da vastidão.',
-      nextText: 4.334,
-    },
-
-    /////////////////////////REVISÃO PARADA AQUI/////////////////////////////////
-    {
-      id: 4.334,
-      text: 'Você abre seus olhos, o loop não recomeça, a caixa está lacrada com mais uma camada de fita, o espelho está intacto e a porta completamente aberta.',
-      choices: [
-        {
-          text: 'fechar a caixa e fechar os olhos',
-          nextText: 4.3341, 
-        },
-        {
-          text: 'adentrar na caixa',
-          nextText: 4.3342
-        }
-      ]
-    },
-    {
-      id: 4.3341,
-      text: 'Você abre seus olhos, o loop não recomeça, a caixa está lacrada com mais um layer de fita, o espelho está intacto e a porta completamente aberta.',
-      choices: [
-        {
-          text: 'sair do quarto',
-          nextText: 5
-        }
-      ]
-    },
-    {
-      id: 4.3342,
-      text: 'O frio se espalha pelo seu corpo, o clima fica frio,',
-      // nextText: 
-    }
   ]
+
   useEffect(() => {
     setPressDisable(true);
     setIsChoice(false);
     ImmersiveMode.setBarMode('BottomSticky');
     ImmersiveMode.setBarStyle('Dark');
-    setTimeout(() => {
-      showTextNode(1);
-    }, 2000)
+    setTimeout(() => { showTextNode(1) }, 1000);
   }, [])
 
+  useEffect(() => {
+    setCurrentTextColor(currentBackgroundColor === '#141414' ? '#fff' : '#000');
+  }, [currentBackgroundColor])
+
   return (
-    <Container>
-      {/* <ImageContainer>
-        <Image 
-          animation={shake} iterationCount={Infinity} duration={500} easing="linear"
-          source={Teste} resizeMode="contain" 
+    <Container currentBackgroundColor={currentBackgroundColor}>
+      {isAnimation
+        ? <Animation currentBackgroundColor={currentBackgroundColor}
+          source={currentAnimation.animation}
+          resizeMode={"contain"}
+          rate={1}
+          paused={false}
+          ignoreSilentSwitch={"obey"}
+          onEnd={() => {
+            text.nextAnimationColor && setCurrentBackgroundColor(text.nextAnimationColor);
+            if(currentAnimation.id === text.previousAnimation.id) {
+              console.log('t');
+              setCurrentAnimation();
+              showTextNode(text.id);
+              setIsAnimation(false);
+            } else {
+              if(text.choices) {
+                setTimeout(() => {
+                  text.choices.map((choice) => {
+                    setCurrentChoices(currentChoices => [...currentChoices, choice]);
+                  })
+                }, 1000);
+              } else showTextNode(text.nextText)}}
+            }
         />
-      </ImageContainer> */}
-      <TouchableWithoutFeedback
-        onPress={() =>  {
+        : <TouchableWithoutFeedback
+          onPress={() =>  {
           if(currentChoices.length > 0) {
             return  
           } else if(!pressDisable){
-            setPressDisable(true);
-            if(!isChoice) {
+            setPressDisable(true); 
+            if(text.nextAnimation) {
+              setIsAnimation(true);
+            } else if(!isChoice) {
               showTextNode(text.nextText); 
             }
           } 
         }
       }
       >
-        <NarratorText
+        <NarratorText currentTextColor={currentTextColor}
           // minDelay={20} maxDelay={80}
-          minDelay={10} maxDelay={10}
+          minDelay={1} maxDelay={5}
           typing={1} fixed={true}
           onTyped={() => {setPressDisable(true); setIsChoice(false)}}
           onTypingEnd={() => {setPressDisable(false); !isChoice && text.choices && setIsChoice(true);}}
@@ -319,7 +328,7 @@ export default function AbrirOlhos() {
           {text.text !== undefined ? text.text : ''}
         </NarratorText> 
       </TouchableWithoutFeedback>
-   
+      }
         <Choices animation={isChoice ? zoomIn : zoomOut}>
           {currentChoices.map((choice) => {
             return (

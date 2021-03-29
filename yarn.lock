@@ -6178,6 +6178,11 @@ rimraf@~2.2.6:
   resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.2.8.tgz#e439be2aaee327321952730f99a8929e4fc50582"
   integrity sha1-5Dm+Kq7jJzIZUnMPmaiSnk/FBYI=
 
+rn-glitch-effect@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/rn-glitch-effect/-/rn-glitch-effect-1.1.0.tgz#ee36fc21983fb5dc0011cbd8320231335edee2ef"
+  integrity sha512-UzvxE4mFgnGPnJLMGK8Xw7tAlFWLAiCCDIqapn85iMcpvI0aZZXNcZ0qwq1xA7QJCGvHtnFA7qDTj7Cy3bXbGQ==
+
 rsvp@^4.8.4:
   version "4.8.5"
   resolved "https://registry.yarnpkg.com/rsvp/-/rsvp-4.8.5.tgz#c8f155311d167f68f21e168df71ec5b083113734"

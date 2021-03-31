@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { TouchableWithoutFeedback } from 'react-native';
+import { StatusBar, TouchableWithoutFeedback } from 'react-native';
 import ImmersiveMode from 'react-native-immersive-mode';
 
+import Dice from '../../components/Dice';
 import { Container } from '../Menu/styles';
 import { zoomIn, zoomOut } from '../../animations';
 import { NarratorText, Choices, Choice, ChoiceText, Animation } from './styles';
@@ -17,16 +18,16 @@ export default function AbrirOlhos() {
   const [currentBackgroundColor, setCurrentBackgroundColor] = useState('#141414');
   const [currentTextColor, setCurrentTextColor] = useState('#000');
   const [isChoice, setIsChoice] = useState(false);
+  const [rollDice, setRollDice] = useState(false);
+  const [diceResult, setDiceResult] = useState(1);
   const [currentChoices, setCurrentChoices] = useState([]);
   const [choicesState, setChoicesState] = useState({});
     
-  console.log(choicesState);
+  console.log(currentChoices);
 
   function showTextNode(textNodeIndex) {
-    
     const textNode = textNodes.find(textNode => textNode.id === textNodeIndex);
     setText(textNode);
-    
     setCurrentChoices([]);
     
     if(textNode.previousAnimation && textNode.previousAnimation.id !== currentAnimation.id) {
@@ -54,25 +55,27 @@ export default function AbrirOlhos() {
       let states = choicesState;
       states = Object.assign(states, choice.setState)
       setChoicesState(states);
-      
-      if(nextTextNode.previousAnimation) {
-        console.log('nextTextNode.previousAnimation')
-        setCurrentAnimation(nextTextNode.previousAnimation);
-        setIsAnimation(true);
-      } else {
-        setIsAnimation(false);
-        showTextNode(choice.nextText);
-      }
-    } else {
-      if(nextTextNode.previousAnimation) {
-        setCurrentAnimation(nextTextNode.previousAnimation);
-        setIsAnimation(true);
-      } else {
-        setIsAnimation(false);
-        showTextNode(choice.nextText);
-      }
     }
+
+    if(choice.dice) {
+      setRollDice(true);
+      setTimeout(() => {
+      setRollDice(false);
+      }, 4000)
+    }
+    
+    setTimeout(() => {
+      if(nextTextNode.previousAnimation) {
+        setCurrentAnimation(nextTextNode.previousAnimation);
+        setIsAnimation(true);
+      } else {
+        setIsAnimation(false);
+        showTextNode(choice.nextText);
+      }
+    }, choice.dice ? 4000 : 0)
   }
+
+  function handleSetDiceResult(result) { setDiceResult(result) }
 
   const textNodes = [
     // ESTRUTURA DEFAULT
@@ -103,7 +106,7 @@ export default function AbrirOlhos() {
         {
           text: 'tocar seu rosto',
           nextText: 2.1,
-          setState: { encarouAbismo: false }
+          setState: { encarouAbismo: false },
         },
         {
           text: 'encarar o abismo',
@@ -117,23 +120,118 @@ export default function AbrirOlhos() {
       text: 'Você levanta, se entende como ser neste espaço claustrofóbico, e tocando o próprio rosto, sente que até então eles não estavam realmente abertos...',
       choices: [
         {
+          text: 'manter olhos fechados',
+          nextText: 2.11
+        },
+        {
           text: 'abrir os olhos',
           nextText: 3
         }
       ]
     },
     {
+      id: 2.11,
+      text: 'Tocando seu rosto você consegue sentir que algo está errado, esse lugar por mais familiar que seja, ele não parece real, não deve ser real...',
+      choices: [
+        {
+          text: 'abrir os olhos',
+          nextText: 3,
+          setState: { rotaMeme: false }
+        },
+        {
+          text: 'rolar na cama',
+          nextText: 'meme-1',
+          setState: { rotaMeme: true }
+        }
+      ]
+    },
+    //ROTA MEME
+    {
+      id: 'meme-1',
+      text: 'Mas é claro que isso está errado, é mais um dos seus pesadelos, o mesmo lugar, mesma casa, acho que é a hora de acordar, amigo.',
+      choices: [
+        {
+          text: 'acordar',
+          nextText: 'meme-2'
+        }
+      ]
+    },
+    {
+      id: 'meme-2',
+      text: 'ILL O rosto é todo rasurado em rotoscopia pra representar que ele não se conhece bla bla bla mama meu ovo seus olhos abrem, está tudo em preto e branco, você olha no relógio, são 4:35 AM, você respira fundo, encara o teto e reflete, relógio de parede e são 5:20, banho.\n\nVocê olha pra seu celular, já são quase 6 horas e você ainda está perambulando pela casa de cueca, vamos lá campeão, daqui a pouco é hora de trabalhar.',
+      choices: [
+        {
+          text: 'criar coragem para se vestir',
+          dice: true,
+          nextText: 
+            diceResult === 1 ? 'meme-2-1' 
+            : diceResult >= 2 && diceResult < 4 ? 'meme-2-2'
+            : 'meme-2-3',
+        },
+        {
+          text: 'ir fazer um café',
+          nextText: 'meme-3-4'
+        }
+      ]
+    },
+    {
+      id: 'meme-2-1',
+      text: 'Você encara seu telefone por alguns minutos, apoia a cabeça na mesa...\n\nILL cabeça na mesa.',
+      nextText: 'meme-2-1-1'
+    },
+    {
+      id: 'meme-2-1-1',
+      text: '...',
+      nextText: 'meme-2-1-2'
+    },
+    {
+      id: 'meme-2-1-2',
+      text: 'Droga, já são 7 horas, acho que você vai se atrasar.',
+      nextText: 'meme-2-1-3'
+    },
+    {
+      id: 'meme-2-1-3',
+      text: 'Você corre escada a baixo, e da portaria você vê o 141 indo embora, não adianta correr, esperar 10 minutos agora pra pegar o 142...',
+      nextText: 'meme-2-1-4'
+    },
+    {
+      id: 'meme-2-1-4',
+      text: '...',
+      nextText: 'meme-2-1-5'
+    },
+    {
+      id: 'meme-2-1-5',
+      text: 'Ótimo, chegou o ônibus, é isso mesmo, aquele que chacoalha e te deixa enjoado.\n\nILL você no ônibus chacoalhando indo pra o trabalho, entra no trabalho, senta em frente ao PC, respira fundo e começa a clicar, um relógio girando 3 horas em 3 segundos, você encosta a cabeça na mesa e aquele menu de abertura, ABRIR OS OLHOS.',
+      nextText: 'meme-2-1-6'
+    },
+    {
+      id: 'meme-2-1-6',
+      text: 'Você corre até o quarto, pega a primeira roupa que te aparece e veste às pressas.\n\nILL clipe se vestindo.'
+    },
+
+
+
+
+
+
+
+
+
+
+    
+    // ROTA NORMAL
+    {
       id: 2.2,
       text: 'Ele consome até a última gota da sua fina película sanidade, o medo corrói os teus ossos, você não está sozinho, agora está com o abismo.',
-      nextText: 3
+      nextText: 3,
     },
     {
       id: 3,
       previousAnimation: Test1,
-      previousAnimationColor: '#141414',
+      previousAnimationColor: '#fff',
       text: 'As luzes acendem, existem três coisas que roubam sua atenção, elas estão dividindo espaço com você.',
       nextAnimation: Test2,
-      nextAnimationColor: '#fff',
+      nextAnimationColor: '#000',
       choices: [
         {
           text: 'ir à porta',
@@ -279,6 +377,8 @@ export default function AbrirOlhos() {
 
   return (
     <Container currentBackgroundColor={currentBackgroundColor}>
+      <StatusBar animated backgroundColor={currentBackgroundColor}
+        barStyle={currentBackgroundColor == '#fff' ? 'dark-content' : 'light-content'} />
       {isAnimation
         ? <Animation currentBackgroundColor={currentBackgroundColor}
           source={currentAnimation.animation}
@@ -287,13 +387,13 @@ export default function AbrirOlhos() {
           paused={false}
           ignoreSilentSwitch={"obey"}
           onEnd={() => {
-            text.nextAnimationColor && setCurrentBackgroundColor(text.nextAnimationColor);
             if(currentAnimation.id === text.previousAnimation.id) {
-              console.log('t');
+              text.previousAnimationColor && setCurrentBackgroundColor(text.previousAnimationColor);
               setCurrentAnimation();
               showTextNode(text.id);
               setIsAnimation(false);
             } else {
+              text.nextAnimationColor && setCurrentBackgroundColor(text.nextAnimationColor);
               if(text.choices) {
                 setTimeout(() => {
                   text.choices.map((choice) => {
@@ -329,6 +429,8 @@ export default function AbrirOlhos() {
         </NarratorText> 
       </TouchableWithoutFeedback>
       }
+      {isChoice 
+        && 
         <Choices animation={isChoice ? zoomIn : zoomOut}>
           {currentChoices.map((choice) => {
             return (
@@ -340,6 +442,9 @@ export default function AbrirOlhos() {
               </Choice>
           )})}
         </Choices>
+      }
+      {rollDice && <Dice handleSetDiceResult={handleSetDiceResult} />}
+        
     </Container>
   );
 };

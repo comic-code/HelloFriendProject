@@ -85,3 +85,18 @@ export const shake = {
     rotate: "-1deg"
   },
 }
+
+export const DiceAnimation = {
+  0: {
+    scale: 1,
+    rotateZ: '0deg'
+  },
+  0.5: {
+    scale: 1.75,
+    rotateZ: '-180deg'
+  },
+  1: {
+    scale: 1,
+    rotateZ: '-360deg'
+  }
+}

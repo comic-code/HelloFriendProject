@@ -1,7 +1,7 @@
 import styled from 'styled-components/native';
 import * as Animatable from 'react-native-animatable';
 
-export const Container = styled.View`
+export const Container = styled.TouchableOpacity`
   flex: 1;
   width: 150%;
   height: 150%;
@@ -20,6 +20,12 @@ export const DiceContainer = styled(Animatable.View)`
   align-items: center;
   justify-content: center;
 `
+
+export const LuckText = styled(Animatable.Text)`
+  font-size: 24px;
+  font-family: 'PressStart2P-Regular';
+  color: #fff;
+` 
 
 export const DiceNumber = styled.Text`
   font-size: 40px;

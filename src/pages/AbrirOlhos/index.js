@@ -20,18 +20,20 @@ export default function AbrirOlhos() {
   const [isChoice, setIsChoice] = useState(false);
   const [rollDice, setRollDice] = useState(false);
   const [diceResult, setDiceResult] = useState(1);
+  const [selectedChoice, setSelectedChoice] = useState({});
   const [currentChoices, setCurrentChoices] = useState([]);
   const [choicesState, setChoicesState] = useState({});
-    
-  console.log(currentChoices);
+
+  console.log(diceResult)
 
   function showTextNode(textNodeIndex) {
+  
+    rollDice && toggleDice(false);
     const textNode = textNodes.find(textNode => textNode.id === textNodeIndex);
     setText(textNode);
     setCurrentChoices([]);
     
     if(textNode.previousAnimation && textNode.previousAnimation.id !== currentAnimation.id) {
-      console.log(currentAnimation);
       setCurrentAnimation(textNode.previousAnimation);
       setIsAnimation(true);
     } else if(textNode.nextAnimation) {
@@ -49,6 +51,7 @@ export default function AbrirOlhos() {
   }
 
   function selectChoice(choice) {
+    setSelectedChoice(choice);
     const nextTextNode = textNodes.filter((text) => { return text.id === choice.nextText })
 
     if(choice.setState) {
@@ -58,13 +61,8 @@ export default function AbrirOlhos() {
     }
 
     if(choice.dice) {
-      setRollDice(true);
-      setTimeout(() => {
-      setRollDice(false);
-      }, 4000)
-    }
-    
-    setTimeout(() => {
+      toggleDice(true);
+    } else {
       if(nextTextNode.previousAnimation) {
         setCurrentAnimation(nextTextNode.previousAnimation);
         setIsAnimation(true);
@@ -72,12 +70,15 @@ export default function AbrirOlhos() {
         setIsAnimation(false);
         showTextNode(choice.nextText);
       }
-    }, choice.dice ? 4000 : 0)
+    }
+    
+    
   }
 
   function handleSetDiceResult(result) { setDiceResult(result) }
+  function toggleDice(toggle) { setRollDice(toggle) }
 
-  const textNodes = [
+  let textNodes = [
     // ESTRUTURA DEFAULT
     // {
     //   id: 0,
@@ -105,7 +106,8 @@ export default function AbrirOlhos() {
       choices: [
         {
           text: 'tocar seu rosto',
-          nextText: 2.1,
+          // nextText: 2.1,
+          nextText: 'meme-2',
           setState: { encarouAbismo: false },
         },
         {
@@ -163,10 +165,14 @@ export default function AbrirOlhos() {
         {
           text: 'criar coragem para se vestir',
           dice: true,
-          nextText: 
-            diceResult === 1 ? 'meme-2-1' 
-            : diceResult >= 2 && diceResult < 4 ? 'meme-2-2'
-            : 'meme-2-3',
+          diceValues : [
+            'meme-2-1',
+            'meme-2-2',
+            'meme-2-2',
+            'meme-2-2',
+            'meme-2-3',
+            'meme-2-3'
+          ]
         },
         {
           text: 'ir fazer um café',
@@ -202,14 +208,19 @@ export default function AbrirOlhos() {
     {
       id: 'meme-2-1-5',
       text: 'Ótimo, chegou o ônibus, é isso mesmo, aquele que chacoalha e te deixa enjoado.\n\nILL você no ônibus chacoalhando indo pra o trabalho, entra no trabalho, senta em frente ao PC, respira fundo e começa a clicar, um relógio girando 3 horas em 3 segundos, você encosta a cabeça na mesa e aquele menu de abertura, ABRIR OS OLHOS.',
-      nextText: 'meme-2-1-6'
+      nextText: 'meme-3'
     },
     {
-      id: 'meme-2-1-6',
-      text: 'Você corre até o quarto, pega a primeira roupa que te aparece e veste às pressas.\n\nILL clipe se vestindo.'
+      id: 'meme-2-2',
+      text: 'Você encara o telefone, assiste um ou 2 vídeos no Youtube',
+      nextText: 'meme-3-2-1'
     },
 
 
+    {
+      id: 'meme-2-3',
+      text: 'Você levanta, estica as costas, respira fundo, vai ser um longo dia'
+    },
 
 
 
@@ -366,6 +377,7 @@ export default function AbrirOlhos() {
   useEffect(() => {
     setPressDisable(true);
     setIsChoice(false);
+    setDiceResult(1);
     ImmersiveMode.setBarMode('BottomSticky');
     ImmersiveMode.setBarStyle('Dark');
     setTimeout(() => { showTextNode(1) }, 1000);
@@ -443,7 +455,12 @@ export default function AbrirOlhos() {
           )})}
         </Choices>
       }
-      {rollDice && <Dice handleSetDiceResult={handleSetDiceResult} />}
+      {rollDice && 
+        <Dice 
+          handleSetDiceResult={handleSetDiceResult}
+          choice={selectedChoice}
+          showTextNode={showTextNode}  
+        />}
         
     </Container>
   );

@@ -59,6 +59,10 @@ export const Choice = styled.TouchableOpacity`
   border-radius: 5px;
   justify-content: center;
   align-items: center;
+  border-bottom-width: 5px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-color: #309ACF;
 `
 
 export const ChoiceText = styled(DefaultText)`

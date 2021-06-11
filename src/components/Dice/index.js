@@ -25,7 +25,7 @@ export default function Dice({ handleSetDiceResult, choice, showTextNode }) {
           setTimeout(() => {
             setRollDice(false);
             showTextNode(choice.diceValues[diceSide - 1]);
-          }, 3000);
+          }, 2000);
         }}  
       >
         {showNumber && <DiceNumber>{diceSide}</DiceNumber>}

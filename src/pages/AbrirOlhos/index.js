@@ -3,6 +3,7 @@ import { StatusBar, TouchableWithoutFeedback } from 'react-native';
 import ImmersiveMode from 'react-native-immersive-mode';
 
 import Dice from '../../components/Dice';
+import Achievement from '../../components/Achievement';
 import { Container } from '../Menu/styles';
 import { zoomIn, zoomOut } from '../../animations';
 import { NarratorText, Choices, Choice, ChoiceText, Animation } from './styles';
@@ -165,21 +166,15 @@ export default function AbrirOlhos() {
         {
           text: 'criar coragem para se vestir',
           dice: true,
-          diceValues : [
-            'meme-2-1',
-            'meme-2-2',
-            'meme-2-2',
-            'meme-2-2',
-            'meme-2-3',
-            'meme-2-3'
-          ]
+          diceValues : ['meme-2-1', 'meme-2-2', 'meme-2-2', 'meme-2-2', 'meme-2-3', 'meme-2-3']
         },
         {
           text: 'ir fazer um café',
-          nextText: 'meme-3-4'
+          nextText: 'meme-2-4'
         }
       ]
     },
+    // Dice = 1
     {
       id: 'meme-2-1',
       text: 'Você encara seu telefone por alguns minutos, apoia a cabeça na mesa...\n\nILL cabeça na mesa.',
@@ -210,25 +205,107 @@ export default function AbrirOlhos() {
       text: 'Ótimo, chegou o ônibus, é isso mesmo, aquele que chacoalha e te deixa enjoado.\n\nILL você no ônibus chacoalhando indo pra o trabalho, entra no trabalho, senta em frente ao PC, respira fundo e começa a clicar, um relógio girando 3 horas em 3 segundos, você encosta a cabeça na mesa e aquele menu de abertura, ABRIR OS OLHOS.',
       nextText: 'meme-3'
     },
+    // Dice = 2, 3, 4
     {
       id: 'meme-2-2',
       text: 'Você encara o telefone, assiste um ou 2 vídeos no Youtube',
-      nextText: 'meme-3-2-1'
+      nextText: 'meme-2-2-1'
     },
-
-
+    {
+      id: 'meme-2-2-1',
+      text: '...',
+      nextText: 'meme-2-2-2'
+    },
+    {
+      id: 'meme-2-2-1',
+      text: '...\n\nDroga, quase 7 horas, você realmente deveria levantar.',
+      nextText: 'meme-2-2-3'
+    },
+    {
+      id: 'meme-2-2-3',
+      text: 'Você corre até o quarto, pega a primeira roupa que te aparece e veste às pressas.\n\n ILL clipe vestindo.',
+      nextText: 'meme-2-2-4'
+    },
+    {
+      id: 'meme-2-2-4',
+      text: 'Você corre até o quarto, pega a primeira roupa que te aparece e veste às pressas.',
+      nextText: 'meme-2-2-5'
+    },
+    {
+      id: 'meme-2-2-5',
+      text: 'Você desce as escadas, e olha, o ônibus 141 está lá te esperando, pelo menos não é o que chacoalha. \n\n ILL no ônibus indo pra o trabalho, entra no trabalho, senta em frente ao PC, respira fundo e começa a clicar, um relógio girando 3 horas em 3 segundos, você encosta a cabeça na mesa e aquele menu de abertura, ABRIR OS OLHOS.',
+      nextText: 'meme-3'
+    },
+    // Dice = 5, 6
     {
       id: 'meme-2-3',
-      text: 'Você levanta, estica as costas, respira fundo, vai ser um longo dia'
+      text: 'Você levanta, estica as costas, respira fundo, vai ser um longo dia.',
+      nextText: 'meme-2-3-1'
     },
-
-
-
-
-
-
-
-
+    {
+      id: 'meme-2-3-1',
+      text: 'Você levanta, estica as costas, respira fundo, vai ser um longo dia.',
+      nextText: 'meme-2-3-1'
+    },
+    {
+      id: 'meme-2-3-1',
+      text: 'ILL indo olhando pra baixo. \n\nCaminhando da sala para o quarto, você sente falta daquele belíssimo café da manhã, mas você não está tão disposto assim. \n\nIndo até o guarda roupa, pega sua camiseta preta, seu casaco, sua calça jeans e seu tênis. \n\nVocê desce as escadas, e olha, o ônibus 141 está lá te esperando, pelo menos não é o que chacoalha.',
+      nextText: 'meme-2-3-2'
+    },
+    {
+      id: 'meme-2-3-2',
+      text: 'ILL no ônibus indo pra o trabalho, entra no trabalho, senta em frente ao PC, respira fundo e começa a clicar, um relógio girando 3 horas em 3 segundos, você encosta a cabeça na mesa e aquele menu de abertura, ABRIR OS OLHOS.',
+      nextText: 'meme-3'
+    },
+    // Fazer café
+    {
+      id: 'meme-2-4',
+      text: 'Você levanta, estala suas costas e vai até o fogão, e prepara seu café instantâneo. ILL fazendo café kk',
+      nextText: 'meme-2-4-1',
+    },
+    {
+      id: 'meme-2-4-1',
+      text: '5 minutinhos são o suficiente para que seu café fique pronto.',
+      choices: [
+        {
+          text: 'Deixar café preto',
+          nextText: 'meme-2-4-1-1'
+        },
+        {
+          text: 'Por açúcar',
+          nextText: 'meme-2-4-1-2'
+        }
+      ]
+    },
+    {
+      id: 'meme-2-4-1-1',
+      text: 'ILL tomando café puro.',
+      nextText: 'meme-2-4-2'
+    },
+    {
+      id: 'meme-2-4-1-1',
+      text: 'ILL pondo açúcar.',
+      nextText: 'meme-2-4-2'
+    },
+    {
+      id: 'meme-2-4-2',
+      text: 'Você está disposto e pronto para um dia produtivo, vamos lá... \n\n ILL vai indo olhando pra baixo.',
+      nextText: 'meme-2-4-3'
+    },
+    {
+      id: 'meme-2-4-3',
+      text: 'Caminhando da cozinha para o quarto, você sente falta daquele belíssimo café da manhã, mas você não está tão disposto assim. \n\nIndo até o guarda roupa, pega sua camiseta preta, seu casaco, sua calça jeans e seu tênis. \n\nVocê põe a sua roupa, desce as escadas do prédio, e vai ao ponto de ônibus. \n\nVocê desce as escadas, e olhaônibus 141 está lá te esperando, pelo menos não é o que chacoalha. ',
+      nextText: 'meme-2-4-4'
+    },
+    {
+      id: 'meme-2-4-4',
+      text: 'Você está disposto e pronto para um dia produtivo, vamos lá...',
+      nextText: 'meme-2-4-5'
+    },
+    {
+      id: 'meme-2-4-5',
+      text: 'Você desce as escadas, e olha, o ônibus 141 está lá te esperando, pelo menos não é o que chacoalha. ILL no ônibus indo pra o trabalho, entra no trabalho, senta em frente ao PC, respira fundo e começa a clicar, um relógio girando 3 horas em 3 segundos, você encosta a cabeça na mesa e aquele menu de abertura, ABRIR OS OLHOS.'
+    },
     
     // ROTA NORMAL
     {
@@ -461,7 +538,7 @@ export default function AbrirOlhos() {
           choice={selectedChoice}
           showTextNode={showTextNode}  
         />}
-        
+      <Achievement />
     </Container>
   );
 };

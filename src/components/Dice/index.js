@@ -9,9 +9,16 @@ export default function Dice({ handleSetDiceResult, choice, showTextNode }) {
   const [showNumber, setShowNumber] = useState(false);
   
   useEffect(() => {
-      const diceResult = Math.floor(Math.random() * 6)
-      setDiceSide(diceResult);
-      handleSetDiceResult(diceResult);
+    let diceResult = function rollDice() {
+      let number;
+      do {
+        number = Math.floor(Math.random() * 6);
+      } while(number < 1 || number > 6)
+      return number;
+    }
+    console.log(diceResult());
+    setDiceSide(diceResult);
+    handleSetDiceResult(diceResult);
   }, [])
 
   return (

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { TouchableOpacity, Vibration, Dimensions } from 'react-native';
 import {Glitch} from 'rn-glitch-effect';
-import { Container, OpenButton, OpenEyesBackground, OpenedEyesBackground } from './styles';
+import { Container, OpenButton, OpenEyesBackground, OpenedEyesBackground, AchievementsText, AchievementsButton } from './styles';
 
 import OpenEyesAnimation from '../../../assets/img/open.mp4'
 import OpenedEyes from '../../../assets/img/opened.jpg';
-
 
 export default function Menu({ navigation }) {
 
@@ -37,21 +36,27 @@ export default function Menu({ navigation }) {
       />
       }
   
-      {isPaused 
-        && <OpenButton onPress={() => {setIsPaused(false)}}>
-        <Glitch text={'Abrir os olhos'}
-          shadowColor="#EA048D"
-          glitchDuration={400}
-          repeatDelay={1000}
-          glitchAmplitude={10}
-          textStyle={{
-            color: '#fff',
-            fontSize: 50,
-            fontFamily: 'sans-serif-condensed'
-          }}
-        />
+      {isPaused && <> 
+        <OpenButton onPress={() => {setIsPaused(false)}}>
+          <Glitch text={'Abrir os olhos'}
+            shadowColor="#EA048D"
+            glitchDuration={400}
+            repeatDelay={1000}
+            glitchAmplitude={10}
+            textStyle={{
+              color: '#fff',
+              fontSize: 50,
+              fontFamily: 'sans-serif-condensed'
+            }}
+          />
         </OpenButton>
-      }
+
+        <AchievementsButton onPress={() => { navigation.navigate("Achievements") }}>
+          <AchievementsText easing="linear" animation="pulse" iterationCount="infinite" direction="alternate">
+            Conquistas
+          </AchievementsText>
+        </AchievementsButton>
+      </>}
     </Container>
   );
 };

@@ -45,6 +45,13 @@ export const OpenedEyesBackground = styled(GlitchImage)`
   background-color: #141414;
 `
 
-export const DefaultButton = styled.TouchableOpacity`
-  border: 1px solid #fff;
+export const AchievementsButton = styled.TouchableOpacity`
+  position: absolute;
+  bottom: 50px;
+  padding: 30px;
+`
+
+export const AchievementsText = styled(Animatable.Text)`
+  font-family: 'PressStart2P-Regular';
+  color: #fff;
 `

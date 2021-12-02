@@ -1,13 +1,11 @@
 
 import React from 'react';
 import { useSharedValue, useAnimatedStyle, withTiming, Easing } from 'react-native-reanimated';
-
 import { AchievementView, AchievementTitle, AchievementDescription } from './styles';
 
-export default function Achievement({}) {
+export default function newAchievement({}) {
   // const offset = useSharedValue(-200);
   const offset = useSharedValue(0);
-  console.log(offset);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [

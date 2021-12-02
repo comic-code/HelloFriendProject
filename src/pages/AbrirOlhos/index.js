@@ -3,7 +3,7 @@ import { StatusBar, TouchableWithoutFeedback } from 'react-native';
 import ImmersiveMode from 'react-native-immersive-mode';
 
 import Dice from '../../components/Dice';
-import Achievement from '../../components/Achievement';
+import newAchievement from '../../components/Achievements/NewAchievement';
 import { Container } from '../Menu/styles';
 import { zoomIn, zoomOut } from '../../animations';
 import { NarratorText, Choices, Choice, ChoiceText, Animation } from './styles';
@@ -15,7 +15,7 @@ export default function AbrirOlhos() {
   const [pressDisable, setPressDisable] = useState(true);
   const [text, setText] = useState({});
   const [isAnimation, setIsAnimation] = useState(false);
-  const [currentAnimation, setCurrentAnimation] = useState('');
+  const [currentAnimation, setCurrentAnimation] = useState({});
   const [currentBackgroundColor, setCurrentBackgroundColor] = useState('#141414');
   const [currentTextColor, setCurrentTextColor] = useState('#000');
   const [isChoice, setIsChoice] = useState(false);
@@ -24,8 +24,6 @@ export default function AbrirOlhos() {
   const [selectedChoice, setSelectedChoice] = useState({});
   const [currentChoices, setCurrentChoices] = useState([]);
   const [choicesState, setChoicesState] = useState({});
-
-  console.log(diceResult)
 
   function showTextNode(textNodeIndex) {
   
@@ -312,6 +310,7 @@ export default function AbrirOlhos() {
       id: 2.2,
       text: 'Ele consome até a última gota da sua fina película sanidade, o medo corrói os teus ossos, você não está sozinho, agora está com o abismo.',
       nextText: 3,
+      // achievement: 
     },
     {
       id: 3,
@@ -538,7 +537,7 @@ export default function AbrirOlhos() {
           choice={selectedChoice}
           showTextNode={showTextNode}  
         />}
-      <Achievement />
+      <Achievements />
     </Container>
   );
 };
